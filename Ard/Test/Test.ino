@@ -149,6 +149,7 @@ void correct_right(){
 }
 
 
+int countNode=1;
 int rfidTable[6][6];
 int rfidTemp[7];
 int row=4, col=4;
@@ -183,6 +184,7 @@ if ( ! rfid.PICC_IsNewCardPresent())
     lcd.setCursor(0, 1);
     lcd.print(readbackblock[0]-48);
     tempInd++;
+    countNode++;
     if(tempInd==6){
         lcd.clear();
         lcd.setCursor(0, 1);
@@ -217,27 +219,19 @@ void scanIrSensorBW(){
 }
 
 
-int countNode=1;
 
 void getCoord(){
   int val=countNode-1;
   row=4-(val/5);
   if((val/5)%2==0){
-    col=4-val%5;
-  }else{
     col=val%5;
+  }else{
+    col=4-val%5;
   }
 }
 
-void loop() {
-
-  Serial.println("Start:");
-  
-  Serial.println(irValues);
-  
-  
+void loop() { 
 //FIRST RUN
-
 while(1){
     scanIrSensorBW();
      readRfid();
@@ -258,11 +252,7 @@ while(1){
         stopMotion();
         delay(20000);
         break;
-      }
-     
-      
-    
-      countNode++;     
+      }    
     }else if(irValues[0]=='0' && irValues[1]=='0' && irValues[2]=='0'){
       lcd.setCursor(0, 0);
       lcd.print(countNode);
@@ -275,14 +265,11 @@ while(1){
       }else{
         full_forward();
       }
-      
-      
       if(countNode==24){
         stopMotion();
         delay(20000);
         break;
-      }
-      countNode++;           
+      }       
     }else if(irValues[7]=='0' || irValues[6]=='0'){
       correct_left();
     }else if(irValues[0]=='0' || irValues[1]=='0'){
